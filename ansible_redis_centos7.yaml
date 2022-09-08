@@ -1,0 +1,58 @@
+---
+- hosts: redis_centos7
+  vars:
+    hello: Ansible
+
+  environment:
+#    https_proxy:
+#    http_proxy:
+#    no_proxy: 
+
+  tasks:
+  - name: Install EPEL 1
+    yum:
+      name:
+       - wget
+       - epel-release
+       - dnf-plugins-core
+      state: latest
+      disable_gpg_check: yes
+    tags: install_Remi
+
+  - name: Install EPEL 2
+    yum:
+      name: 'http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+      state: present
+    tags: install_Remi
+
+  - name: Get rpm
+    shell: wget http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    tags: install_Remi
+
+  - name: Install rpm
+    ignore_errors: yes
+    shell: rpm -Uvh remi-release-7.rpm
+    tags: install_Remi
+
+  - name: Enable remi repo
+    shell: sed -i 's/enabled=0/enabled=1/g' -i.bak /etc/yum.repos.d/remi.repo
+    tags: install_Remi
+
+  - name: install redis
+    yum:
+      name: redis
+      state: latest
+      disable_gpg_check: yes
+    tags: install_redis
+
+  - name: config redis
+    shell: sed -e 's|^bind 127.0.0.1|bind 0.0.0.0|g' -e 's|^daemonize no|daemonize yes|g' -i.bak /etc/redis.conf 
+    tags: config_redis
+
+  - name: start redis
+    service:
+      name: redis
+      enabled: yes
+      state: started
+    tags: start_redis
+
