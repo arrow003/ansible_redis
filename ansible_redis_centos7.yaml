@@ -46,7 +46,7 @@
     tags: install_redis
 
   - name: config redis
-    shell: sed -e 's|^bind 127.0.0.1|bind 0.0.0.0|g' -e 's|^daemonize no|daemonize yes|g' -i.bak /etc/redis.conf 
+    shell: sed -e 's|^bind 127.0.0.1 ::1|bind *|g' -e 's|^daemonize no|daemonize yes|g' -e 's|^protected-mode yes|protected-mode no|g'  -i.bak /etc/redis/redis.conf 
     tags: config_redis
 
   - name: start redis
