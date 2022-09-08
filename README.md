@@ -1,5 +1,7 @@
 ## ansible install redis
+
 本脚本支持在CentOS7/8、RedHat7/8、Rocky Linux 8、Alma Linux 8
+
 1.在ansible服务器侧添加准备安装vuls服务器的hosts
 
 $ cat /etc/ansible/hosts 
